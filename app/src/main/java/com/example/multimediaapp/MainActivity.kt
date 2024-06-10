@@ -3,6 +3,7 @@ package com.example.multimediaapp
 import android.Manifest
 import android.content.ContentUris
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
@@ -11,10 +12,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -76,7 +79,7 @@ fun RequestPermission() {
         val context = LocalContext.current
         val mediaItems by remember { mutableStateOf(loadMediaItems(context)) }
         createLazyView(mediaItems)
-        MediaList(mediaItems)
+//        MediaList(mediaItems)
     }else{
         Column {
             val textToShow = if (videoPermissionState.status.shouldShowRationale) {
@@ -92,21 +95,34 @@ fun RequestPermission() {
         }
     }
 }
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun createLazyView(mediaItems: List<MediaItem>) {
     val numbers = (0..20).toList()
+    val context = LocalContext.current
     LazyVerticalGrid(
         columns = GridCells.Fixed(3), // Changed to 3 columns as per your request
         modifier = Modifier.padding(16.dp)
     ) {
         items(mediaItems) { mediaItems ->
             Log.i("dongdong", "uri build: "+ mediaItems.uri)
+            val currentColor = remember { mutableStateOf(Color.Red) }
             Box(
                 modifier = Modifier
                     .padding(8.dp)
                     .aspectRatio(1f)
                     .fillMaxSize()
-                    .background(Color.Red)
+                    .background(currentColor.value)
+                    .combinedClickable(
+                        onClick = {
+                            Log.i("dongdong", " combinedClickable on Click")
+                            context.startActivity(Intent(context, DetailActivity::class.java))
+                        },
+                        onLongClick = {
+                            Log.i("dongdong", " combinedClickable on Long Click")
+                            currentColor.value = if(currentColor.value == Color.Red) Color.Blue else Color.Red
+                        },
+                    )
             ) {
                 Image(
                     painter = rememberAsyncImagePainter(
@@ -126,7 +142,6 @@ fun createLazyView(mediaItems: List<MediaItem>) {
         }
     }
 }
-
 
 @Composable
 fun MediaList(mediaItems: List<MediaItem>) {

@@ -63,6 +63,9 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.29.1-alpha")
     implementation("com.google.accompanist:accompanist-insets:0.29.1-alpha")
     implementation("io.coil-kt:coil-compose:2.2.2")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.12.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
